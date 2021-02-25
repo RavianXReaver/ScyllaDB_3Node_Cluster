@@ -1,0 +1,18 @@
+cluster_name: 'Test Cluster'
+num_tokens: 256
+endpoint_snitch: Ec2Snitch
+data_file_directories:
+    - /var/lib/scylla/data
+commitlog_directory: /var/lib/scylla/commitlog
+seed_provider:
+    - class_name: org.apache.cassandra.locator.NetworkTopologyStrategy
+      parameters:
+          - seeds: "{{Node1_IP}}, {{Node2_IP}}, {{Node3_IP}}"
+listen_address: {{ansible_eth0.ipv4.address}}
+broadcast_address: {{ansible_eth0.ipv4.address}}
+broadcast_rpc_address: {{ansible_eth0.ipv4.address}}
+native_transport_port: 9042
+rpc_address: {{ansible_eth0.ipv4.address}}
+rpc_port: 9160
+api_port: 10000
+api_address: {{ansible_eth0.ipv4.address}}

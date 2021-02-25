@@ -1,0 +1,63 @@
+---
+- name: Install ScyllaDB Cluster
+  hosts: Cluster_Nodes
+  become: yes
+  gather_facts: false
+
+  tasks:
+    
+    - name: Wait for system to become reachable
+      wait_for_connection:
+    
+    - name: Gather facts for the first time
+      setup:
+    
+    - name: Update the repository
+      apt:
+        update_cache: yes
+        
+    - name: Adding the Scylla APT repository to the system
+      ansible.builtin.apt_key: 
+        keyserver: hkp://keyserver.ubuntu.com:80
+        id: 5e08fbd8b5d6ec9c
+    
+    - name: Copying the repository file
+      get_url: 
+        url: http://downloads.scylladb.com/deb/ubuntu/scylla-4.3-{{ansible_distribution_release}}.list
+        dest: /etc/apt/sources.list.d/scylla.list
+
+    - name: Update the repository
+      apt:
+        update_cache: yes
+    
+    - name: Install Scylla
+      apt: 
+        name: scylla
+        state: present
+
+    - name: Install Java
+      apt:
+        name: openjdk-8-jre-headless
+        state: present
+
+    - name: Update Java alternative
+      command: update-java-alternatives --jre-headless -s java-1.8.0-openjdk-amd64
+
+    - name: Tune up scylla system settings
+      command: scylla_setup --no-raid-setup --no-ec2-check
+
+    - name: Template the Scylla Config file to /etc/scylla/scylla.yaml
+      template:
+        src: ../Resources/scylla.j2
+        dest: /etc/scylla/scylla.yaml
+    
+    - name: Template the Scylla Rack-DC properties to /etc/scylla/cassandra-rackdc.properties
+      template:
+        src: ../Resources/cassandra-rackdc.properties.j2
+        dest: /etc/scylla/cassandra-rackdc.properties
+
+    - name: Start Scylla Server
+      service:
+        name: scylla-server
+        state: started
+        enabled: yes
