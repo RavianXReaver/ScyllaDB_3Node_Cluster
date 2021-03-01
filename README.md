@@ -53,11 +53,21 @@ e AWS in this scenario.
     default = "ap-southeast-1"
     }
 ```
-4. After you have done the basic configuration, change the directory to `Terraform`. Because now on, you will be using several Terraform commands to Create the cluster.
+4. After you have done the basic configuration, change the directory to `Terraform`. Because now on, you will be using several Terraform commands to create the cluster.
 
 ```
    cd Terraform
 ```
 5. Let's run `Terraform init` to initialize the current working directory. It will also install required modules that we will need to run Terraform.
 
-6. After
+6. Now it is time to run the main Terraform file. There are 2 ways to run the command:
+
+```
+   yes 'yes' | terraform apply
+```
+​  ​​​ ​​​​ ​​​​​         or
+
+```
+   terraform apply
+```
+7. This is it! You made it to the end! If you happen to come across any issue, make sure to raise an issue. 
