@@ -70,4 +70,4 @@ e AWS in this scenario.
 ```
    terraform apply
 ```
-7. This is it! You made it to the end! If you happen to come across any issue, make sure to raise an issue. 
+7. This is it! You made it to the end! If you happen to come across any issues, make sure to raise it. 
