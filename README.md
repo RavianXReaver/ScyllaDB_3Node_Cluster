@@ -33,4 +33,4 @@ The *Terraform* directory contains 5 files:
 
  - `terraform.tfvars.example` - This file contains the secrets for your AWS account. This file should be renamed to *terraform.tfvars* (Remove ".example" from the file name). If not, Terraform will not be able to connect with your AWS account.
 
- - `variables.tf` - This file contains all the global variables that will be used by *main.tf<nolink>*. Note: The only variables that you should consider updating are: *Instance_Type* and *Region*..
+ - `variables.tf` - This file contains all the global variables that will be used by *main.tf<nolink>*. Note: The only variables that you should consider updating are: *Instance_Type* and *Region*.
