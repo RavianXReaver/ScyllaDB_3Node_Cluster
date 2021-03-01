@@ -27,10 +27,37 @@ The *Resources* directory contains 2 files:
 The *Terraform* directory contains 5 files:
 
  - `main.tf` - This file defines the entire AWS infrastructure that is needed to create the 3 node ScyllaDB cluster.
- - `output.tf` - This file defines what type of output that Terraform should print upon a successful resource creation. This will simply print out individual ssh commands for each node in the cluster. 
-
- - `provider.tf` - This file contains the configuration details of the selected cloud provider, which happens to be AWS in this scenario.
+ - `output.tf` - This file defines what type of output that Terraform should print upon a successful resource creation. This will simply print out individual ssh commands for each ansible.cfg - This is the ansible configuration file, where, it is explicitly told to refer to the particular Inventory file when the Ansible Playbook is run. A dynamic inventory file will be created by Terraform when you invoke terraform.
+e AWS in this scenario.
 
  - `terraform.tfvars.example` - This file contains the secrets for your AWS account. This file should be renamed to *terraform.tfvars* (Remove ".example" from the file name). If not, Terraform will not be able to connect with your AWS account.
 
  - `variables.tf` - This file contains all the global variables that will be used by *main.tf<nolink>*. Note: The only variables that you should consider updating are: *Instance_Type* and *Region*.
+
+
+ ### **Let's get started, shall we?**
+
+ 1. Let's begin with renaming this file: `Terraform/terraform.tfvars.example` to `Terraform/terraform.tfvars`. 
+
+ 2. Open `Terraform/terraform.tfvars` and enter your AWS secrect ID and key. Then save it.
+
+```
+    Access_Key_ID = "dsadDSDD33fdsfd"
+    Secret_Access_Key = "Scxsadwr344fddsfsdfsd3"
+```
+ 3. This step is optional. By default, the selected AWS region for resource creation is "ap-southeast-1" - Singapore. But feel free to change it to your closest region. The terraform variable file is in: `Terraform/variables.tf` 
+
+ ```
+    variable "Region" {
+    type = string
+    default = "ap-southeast-1"
+    }
+```
+4. After you have done the basic configuration, change the directory to `Terraform`. Because now on, you will be using several Terraform commands to Create the cluster.
+
+```
+   cd Terraform
+```
+5. Let's run `Terraform init` to initialize the current working directory. It will also install required modules that we will need to run Terraform.
+
+6. After
