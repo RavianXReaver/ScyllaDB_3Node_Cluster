@@ -1,2 +1,6 @@
 Terraform/terraform.tfvars
 Terraform/.terraform/
+Terraform/.terraform.lock.hcl
+Terraform/crash.log
+Terraform/terraform.tfstate*
+Resources/*.rsa
