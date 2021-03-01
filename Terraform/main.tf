@@ -42,7 +42,7 @@ resource "aws_main_route_table_association" "route_association_scylla" {
 resource "aws_subnet" "subnet_scylla_a" {
     vpc_id     = aws_vpc.vpc_scylla_cluster.id
     cidr_block = var.Subnet_A
-    availability_zone = var.Subnet_A_AZ
+    availability_zone = local.Subnet_A_AZ
 
     tags = {
       "Name" = "Scylla_A"
@@ -52,7 +52,7 @@ resource "aws_subnet" "subnet_scylla_a" {
 resource "aws_subnet" "subnet_scylla_b" {
     vpc_id     = aws_vpc.vpc_scylla_cluster.id
     cidr_block = var.Subnet_B
-    availability_zone = var.Subnet_B_AZ
+    availability_zone = local.Subnet_B_AZ
 
     tags = {
       "Name" = "Scylla_B"
@@ -62,7 +62,7 @@ resource "aws_subnet" "subnet_scylla_b" {
 resource "aws_subnet" "subnet_scylla_c" {
     vpc_id     = aws_vpc.vpc_scylla_cluster.id
     cidr_block = var.Subnet_C
-    availability_zone = var.Subnet_C_AZ
+    availability_zone = local.Subnet_C_AZ
     
     tags = {
       "Name" = "Scylla_C"
@@ -117,8 +117,6 @@ resource "aws_iam_role_policy" "policy_role_scylla" {
           "ssm:ListAssociations",
           "ssm:ListInstanceAssociations",
           "ssm:PutInventory",
-          "ssm:PutComplianceItems",
-          "ssm:PutConfigurePackageResult",
           "ssm:UpdateAssociationStatus",
           "ssm:UpdateInstanceAssociationStatus",
           "ssm:UpdateInstanceInformation"
@@ -194,8 +192,25 @@ resource "aws_key_pair" "private_key_scylla" {
   public_key = tls_private_key.scylla_cluster_pk.public_key_openssh
 }
 
+data "aws_ami" "ubuntu" {
+
+    most_recent = true
+
+    filter {
+        name   = "name"
+        values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+    }
+
+    filter {
+        name = "virtualization-type"
+        values = ["hvm"]
+    }
+
+    owners = ["099720109477"]
+}
+
 resource "aws_instance" "scylla_node_a" {
-  ami           = var.AMI
+  ami           = data.aws_ami.ubuntu.id
   instance_type = var.Instance_Type
   subnet_id     = aws_subnet.subnet_scylla_a.id
   security_groups = ["${aws_security_group.security_group_cluster.id}"]
@@ -213,7 +228,7 @@ resource "aws_instance" "scylla_node_a" {
 }
 
 resource "aws_instance" "scylla_node_b" {
-  ami           = var.AMI
+  ami           = data.aws_ami.ubuntu.id
   instance_type = var.Instance_Type
   subnet_id     = aws_subnet.subnet_scylla_b.id
   security_groups = ["${aws_security_group.security_group_cluster.id}"]
@@ -231,7 +246,7 @@ resource "aws_instance" "scylla_node_b" {
 }
 
 resource "aws_instance" "scylla_node_c" {
-  ami           = var.AMI
+  ami           = data.aws_ami.ubuntu.id
   instance_type = var.Instance_Type
   subnet_id     = aws_subnet.subnet_scylla_c.id
   security_groups = ["${aws_security_group.security_group_cluster.id}"]
@@ -254,19 +269,19 @@ resource "local_file" "ansible_inventory" {
               formatlist(
                 "%s AZ=%s",
                 aws_instance.scylla_node_a.public_ip,
-                var.Subnet_A_AZ
+                local.Subnet_A_AZ
               )
             )}\n${join("\n",
               formatlist(
                 "%s AZ=%s",
                 aws_instance.scylla_node_b.public_ip,
-                var.Subnet_B_AZ
+                local.Subnet_B_AZ
               )
             )}\n${join("\n",
               formatlist(
                 "%s AZ=%s",
                 aws_instance.scylla_node_c.public_ip,
-                var.Subnet_C_AZ
+                local.Subnet_C_AZ
               )
             )}\n\n[Cluster_Nodes:vars]\n${join("\n",
               formatlist(

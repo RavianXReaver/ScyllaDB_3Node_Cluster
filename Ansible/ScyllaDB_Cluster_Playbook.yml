@@ -48,8 +48,8 @@
 
     - name: Template the Scylla Config file to /etc/scylla/scylla.yaml
       template:
-        src: ../Resources/scylla.j2
-        dest: /etc/scylla/scylla.yaml
+        src: ../Resources/scylla.yml.j2
+        dest: /etc/scylla/scylla.yml
     
     - name: Template the Scylla Rack-DC properties to /etc/scylla/cassandra-rackdc.properties
       template:
